@@ -32,6 +32,9 @@ export default function Header() {
           >
             Dashboard
           </Link>
+          <Link to="/courses" className="text-gray-600 hover:text-blue-600 px-3 py-2 rounded">
+            All Courses
+          </Link>
           {/* We will add the 'All Courses' link in a later step */}
         </div>
 

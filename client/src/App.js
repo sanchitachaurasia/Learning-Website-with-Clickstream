@@ -6,6 +6,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Header from "./components/Header";
+import Courses from "./pages/Courses";
 
 function App() {
   const [user, loading] = useAuthState(auth);
@@ -43,6 +44,11 @@ function App() {
           <Route
             path="/dashboard"
             element={user ? <Dashboard /> : <Navigate to="/login" />}
+          />
+
+          <Route
+            path="/courses"
+            element={user ? <Courses /> : <Navigate to="/login" />}
           />
         </Routes>
       </Router>
