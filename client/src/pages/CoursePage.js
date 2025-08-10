@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Layout from '../components/Layout';
 import { getFirestore, doc, getDoc, collection, getDocs, query, orderBy } from 'firebase/firestore';
+import TextContent from '../components/content/TextContent';
 
 const db = getFirestore();
 
@@ -54,11 +55,12 @@ export default function CoursePage() {
           <div className="mt-8 border-t pt-6">
             <h2 className="text-2xl font-semibold mb-4">Course Content</h2>
             {content.length > 0 ? (
-              <ul className="space-y-2">
+              <ul className="space-y-4">
                 {content.map((item) => (
-                  <li key={item.id} className="p-4 bg-gray-100 rounded-md">
-                    <span className="font-medium">{item.title}</span>
-                    {/* We will render the actual content here next */}
+                  <li key={item.id} className="p-6 bg-white rounded-lg shadow">
+                    <h3 className="text-xl font-semibold mb-3">{item.title}</h3>
+                    {item.type === 'text' && <TextContent data={item} />}
+                    {/* Video content will go here */}
                   </li>
                 ))}
               </ul>
@@ -72,4 +74,4 @@ export default function CoursePage() {
       )}
     </Layout>
   );
-}
+}       
