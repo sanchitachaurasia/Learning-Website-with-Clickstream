@@ -7,6 +7,7 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Header from "./components/Header";
 import Courses from "./pages/Courses";
+import CoursePage from './pages/CoursePage';
 
 function App() {
   const [user, loading] = useAuthState(auth);
@@ -50,6 +51,12 @@ function App() {
             path="/courses"
             element={user ? <Courses /> : <Navigate to="/login" />}
           />
+
+          <Route
+            path="/courses/:courseId"
+            element={user ? <CoursePage /> : <Navigate to="/login" />}
+          />
+
         </Routes>
       </Router>
     </div>

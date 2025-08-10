@@ -3,6 +3,7 @@ import Layout from '../components/Layout';
 import { getFirestore, collection, doc, getDoc, query, where, getDocs } from 'firebase/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../firebase';
+import { Link } from 'react-router-dom';
 
 const db = getFirestore();
 
@@ -54,11 +55,12 @@ export default function Dashboard() {
       ) : myCourses.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
           {myCourses.map(course => (
-            <div key={course.id} className="bg-white rounded-lg shadow-lg p-6">
-              <h2 className="text-xl font-bold text-gray-900">{course.title}</h2>
-              <p className="text-gray-600 mt-2">{course.description}</p>
-              {/* We will make this a link in the next step */}
-            </div>
+            <Link to={`/courses/${course.id}`} key={course.id} className="block hover:shadow-xl transition-shadow duration-300">
+                <div className="bg-white rounded-lg shadow-lg p-6 h-full">
+                <h2 className="text-xl font-bold text-gray-900">{course.title}</h2>
+                <p className="text-gray-600 mt-2">{course.description}</p>
+                </div>
+            </Link>
           ))}
         </div>
       ) : (
