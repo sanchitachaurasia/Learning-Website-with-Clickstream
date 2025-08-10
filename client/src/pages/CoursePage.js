@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import Layout from '../components/Layout';
 import { getFirestore, doc, getDoc, collection, getDocs, query, orderBy } from 'firebase/firestore';
 import TextContent from '../components/content/TextContent';
+import VideoContent from '../components/content/VideoContent';
 
 const db = getFirestore();
 
@@ -60,7 +61,7 @@ export default function CoursePage() {
                   <li key={item.id} className="p-6 bg-white rounded-lg shadow">
                     <h3 className="text-xl font-semibold mb-3">{item.title}</h3>
                     {item.type === 'text' && <TextContent data={item} />}
-                    {/* Video content will go here */}
+                    {item.type === 'video' && <VideoContent data={item} />}
                   </li>
                 ))}
               </ul>
