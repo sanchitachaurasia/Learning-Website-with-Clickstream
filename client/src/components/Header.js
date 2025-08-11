@@ -3,9 +3,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../firebase';
 import { signOut } from 'firebase/auth';
+import { useAdmin } from '../hooks/useAdmin';
 
 export default function Header() {
   const [user] = useAuthState(auth);
+  const { isAdmin } = useAdmin(); // Use the hook to get admin status
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -26,16 +28,18 @@ export default function Header() {
         </Link>
 
         <div className="flex items-center">
-          <Link
-            to="/dashboard"
-            className="text-gray-600 hover:text-blue-600 px-3 py-2 rounded"
-          >
+          <Link to="/dashboard" className="text-gray-600 hover:text-blue-600 px-3 py-2 rounded">
             Dashboard
           </Link>
           <Link to="/courses" className="text-gray-600 hover:text-blue-600 px-3 py-2 rounded">
             All Courses
           </Link>
-          {/* We will add the 'All Courses' link in a later step */}
+          {/* Conditionally render the Admin link */}
+          {isAdmin && (
+            <Link to="/admin" className="text-red-600 font-bold hover:text-red-800 px-3 py-2 rounded">
+              Admin
+            </Link>
+          )}
         </div>
 
         {user && (
