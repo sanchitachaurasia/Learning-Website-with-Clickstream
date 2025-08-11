@@ -1,14 +1,18 @@
 import React from 'react';
 import YouTube from 'react-youtube';
+import { logEvent } from '../../utils/logEvent'; // Import the logger
 
-export default function VideoContent({ data }) {
-  const opts = {
-    height: '390',
-    width: '100%', // Make it responsive
-    playerVars: {
-      autoplay: 0,
-    },
+export default function VideoContent({ data, courseId, user }) { // Accept new props
+  const handlePlay = () => {
+    if (user) {
+      logEvent(user.uid, {
+        eventType: 'video_play',
+        courseId: courseId,
+        contentId: data.id, // Assuming data object has an id
+        videoTitle: data.title
+      });
+    }
   };
-
-  return <YouTube videoId={data.youtubeId} opts={opts} />;
+  // ... opts object ...
+  return <YouTube videoId={data.youtubeId} opts={opts} onPlay={handlePlay} />;
 }

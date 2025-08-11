@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import { logEvent } from '../../utils/logEvent'; // Import the logger
 
-export default function QuizComponent({ data }) {
+export default function QuizComponent({ data, courseId, user }) { // Accept new props
   const [answers, setAnswers] = useState(Array(data.questions.length).fill(null));
   const [submitted, setSubmitted] = useState(false);
   const [score, setScore] = useState(0);
@@ -22,7 +23,16 @@ export default function QuizComponent({ data }) {
     });
     setScore(calculatedScore);
     setSubmitted(true);
-    // We will add clickstream logging here later
+
+    if (user) {
+      logEvent(user.uid, {
+        eventType: 'quiz_submit',
+        courseId: courseId,
+        contentId: data.id,
+        score: calculatedScore,
+        totalQuestions: data.questions.length
+      });
+    }
   };
 
   return (

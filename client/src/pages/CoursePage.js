@@ -5,6 +5,9 @@ import { getFirestore, doc, getDoc, collection, getDocs, query, orderBy } from '
 import TextContent from '../components/content/TextContent';
 import VideoContent from '../components/content/VideoContent';
 import QuizComponent from '../components/content/QuizComponent';
+import { useAuthState } from 'react-firebase-hooks/auth'; // Add import
+import { auth } from '../firebase'; // Add import
+import { logEvent } from '../utils/logEvent'; // Add import
 
 const db = getFirestore();
 
@@ -62,8 +65,8 @@ export default function CoursePage() {
                   <li key={item.id} className="p-6 bg-white rounded-lg shadow">
                     <h3 className="text-xl font-semibold mb-3">{item.title}</h3>
                     {item.type === 'text' && <TextContent data={item} />}
-                    {item.type === 'video' && <VideoContent data={item} />}
-                    {item.type === 'quiz' && <QuizComponent data={item} />}
+                    {item.type === 'video' && <VideoContent data={item} courseId={courseId} user={user} />}
+                    {item.type === 'quiz' && <QuizComponent data={item} courseId={courseId} user={user} />}
                   </li>
                 ))}
               </ul>
