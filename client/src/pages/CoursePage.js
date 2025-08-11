@@ -4,6 +4,7 @@ import Layout from '../components/Layout';
 import { getFirestore, doc, getDoc, collection, getDocs, query, orderBy } from 'firebase/firestore';
 import TextContent from '../components/content/TextContent';
 import VideoContent from '../components/content/VideoContent';
+import QuizComponent from '../components/content/QuizComponent';
 
 const db = getFirestore();
 
@@ -62,6 +63,7 @@ export default function CoursePage() {
                     <h3 className="text-xl font-semibold mb-3">{item.title}</h3>
                     {item.type === 'text' && <TextContent data={item} />}
                     {item.type === 'video' && <VideoContent data={item} />}
+                    {item.type === 'quiz' && <QuizComponent data={item} />}
                   </li>
                 ))}
               </ul>
