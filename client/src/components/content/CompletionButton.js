@@ -1,16 +1,17 @@
 import React from 'react';
-import { getFirestore, doc, updateDoc, arrayUnion, arrayRemove, setDoc } from 'firebase/firestore';
+import { getFirestore, doc, setDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
 
 const db = getFirestore();
 
-export default function CompletionButton({ user, courseId, contentId, isCompleted }) {
+export default function CompletionButton({ user, courseId, contentId, isCompleted, onUpdate }) {
   const handleToggleComplete = async () => {
     if (!user) return;
-
+    
     const userRef = doc(db, 'users', user.uid);
     const progressField = `progress.${courseId}.completedContent`;
 
-    // Using setDoc with merge: true ensures the nested objects are created if they don't exist
+    // Using setDoc with merge: true ensures the nested objects are created if they don't exist.
+    // This is robust and prevents errors if a user has no progress object yet.
     await setDoc(userRef, {
         progress: {
             [courseId]: {
@@ -18,6 +19,12 @@ export default function CompletionButton({ user, courseId, contentId, isComplete
             }
         }
     }, { merge: true });
+
+    // This is the crucial part that tells the parent (CoursePage) to update its state,
+    // which makes the UI change instantly without a page refresh.
+    if (onUpdate) {
+      onUpdate(contentId, !isCompleted);
+    }
   };
 
   return (
