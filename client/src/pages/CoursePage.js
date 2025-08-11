@@ -1,20 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import Layout from '../components/Layout';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth } from '../firebase';
 import { getFirestore, doc, getDoc, collection, getDocs, query, orderBy } from 'firebase/firestore';
+import { logEvent } from '../utils/logEvent';
+import Layout from '../components/Layout';
 import TextContent from '../components/content/TextContent';
 import VideoContent from '../components/content/VideoContent';
 import QuizComponent from '../components/content/QuizComponent';
-import { useAuthState } from 'react-firebase-hooks/auth'; // Add import
-import { auth } from '../firebase'; // Add import
-import { logEvent } from '../utils/logEvent'; // Add import
 
 const db = getFirestore();
 
 export default function CoursePage() {
   const { courseId } = useParams();
+  const [user] = useAuthState(auth);
   const [course, setCourse] = useState(null);
-  const [content, setContent] = useState([]); // State for course content
+  const [content, setContent] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -22,20 +23,17 @@ export default function CoursePage() {
       if (!courseId) return;
       setLoading(true);
       try {
-        // Fetch main course details
         const courseDocRef = doc(db, 'courses', courseId);
         const courseDocSnap = await getDoc(courseDocRef);
 
         if (courseDocSnap.exists()) {
           setCourse({ id: courseDocSnap.id, ...courseDocSnap.data() });
 
-          // Fetch content sub-collection, ordered by the 'order' field
           const contentRef = collection(db, 'courses', courseId, 'content');
           const q = query(contentRef, orderBy('order'));
           const contentSnapshot = await getDocs(q);
           const contentData = contentSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
           setContent(contentData);
-
         } else {
           console.log("No such course!");
         }
@@ -80,4 +78,4 @@ export default function CoursePage() {
       )}
     </Layout>
   );
-}       
+}
