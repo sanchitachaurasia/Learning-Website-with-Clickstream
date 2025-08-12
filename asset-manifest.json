@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/Learning-Website-with-Clickstream/static/css/main.507a75bb.css",
+    "main.js": "/Learning-Website-with-Clickstream/static/js/main.030a3905.js",
+    "static/js/453.46dc3e92.chunk.js": "/Learning-Website-with-Clickstream/static/js/453.46dc3e92.chunk.js",
+    "index.html": "/Learning-Website-with-Clickstream/index.html",
+    "main.507a75bb.css.map": "/Learning-Website-with-Clickstream/static/css/main.507a75bb.css.map",
+    "main.030a3905.js.map": "/Learning-Website-with-Clickstream/static/js/main.030a3905.js.map",
+    "453.46dc3e92.chunk.js.map": "/Learning-Website-with-Clickstream/static/js/453.46dc3e92.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.507a75bb.css",
+    "static/js/main.030a3905.js"
+  ]
+}
