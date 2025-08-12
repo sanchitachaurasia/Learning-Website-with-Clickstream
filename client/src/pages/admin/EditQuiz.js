@@ -1,14 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import Layout from '../../components/Layout';
-import { getFirestore, doc, getDoc, updateDoc } from 'firebase/firestore'; // updateDoc is needed
+import { getFirestore, doc, getDoc, updateDoc } from 'firebase/firestore';
 
 const db = getFirestore();
 
+// This is a template for a new, blank question
+const newQuestionTemplate = {
+  question: '',
+  options: ['', '', '', ''],
+  correctIndex: 0,
+};
+
 export default function EditQuiz() {
   const { courseId, contentId } = useParams();
-  const navigate = useNavigate();
-
   const [quizData, setQuizData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -55,7 +60,18 @@ export default function EditQuiz() {
     setQuizData({ ...quizData, questions: updatedQuestions });
   }
 
-  // --- Add the submit handler ---
+  const addQuestion = () => {
+    const updatedQuestions = [...quizData.questions, newQuestionTemplate];
+    setQuizData({ ...quizData, questions: updatedQuestions });
+  };
+
+  const removeQuestion = (qIndex) => {
+    if (window.confirm(`Are you sure you want to remove Question ${qIndex + 1}?`)) {
+      const updatedQuestions = quizData.questions.filter((_, index) => index !== qIndex);
+      setQuizData({ ...quizData, questions: updatedQuestions });
+    }
+  };
+
   const handleUpdateQuiz = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -73,13 +89,9 @@ export default function EditQuiz() {
     }
   };
 
-  if (loading) {
-    return <Layout><p>Loading quiz editor...</p></Layout>;
-  }
-
-  if (error) {
-    return <Layout><p className="text-red-500">{error}</p></Layout>;
-  }
+  // --- Loading and Error states remain the same ---
+  if (loading) return <Layout><p>Loading quiz editor...</p></Layout>;
+  if (error) return <Layout><p className="text-red-500">{error}</p></Layout>;
 
   return (
     <Layout>
@@ -87,7 +99,7 @@ export default function EditQuiz() {
       {quizData && (
         <div className="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-lg">
           <form onSubmit={handleUpdateQuiz} className="space-y-8">
-            {/* --- Quiz Title and Questions mapping remains the same --- */}
+            {/* --- Quiz Title remains the same --- */}
             <div>
               <label htmlFor="quizTitle" className="block text-lg font-medium text-gray-700">Quiz Title</label>
               <input
@@ -100,7 +112,14 @@ export default function EditQuiz() {
             </div>
 
             {quizData.questions.map((q, qIndex) => (
-              <div key={qIndex} className="p-6 border border-gray-200 rounded-lg">
+              <div key={qIndex} className="p-6 border border-gray-200 rounded-lg relative">
+                <button 
+                  type="button" 
+                  onClick={() => removeQuestion(qIndex)}
+                  className="absolute top-2 right-2 px-2 py-1 text-xs font-bold text-white bg-red-600 rounded-md hover:bg-red-700"
+                >
+                  &times;
+                </button>
                 <label className="block text-md font-medium text-gray-700">Question {qIndex + 1}</label>
                 <textarea
                   value={q.question}
@@ -135,6 +154,16 @@ export default function EditQuiz() {
                 </div>
               </div>
             ))}
+
+            <div className="pt-4">
+              <button
+                type="button"
+                onClick={addQuestion}
+                className="w-full px-6 py-2 font-semibold text-blue-600 border-2 border-dashed border-blue-400 rounded-md hover:bg-blue-50"
+              >
+                + Add Question
+              </button>
+            </div>
 
             {/* --- Add submission button and messages --- */}
             <div className="pt-6 border-t">
