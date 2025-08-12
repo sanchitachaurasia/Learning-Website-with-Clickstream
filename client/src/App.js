@@ -1,6 +1,8 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "./firebase";
+import React, { useEffect } from 'react';
+import { handleGlobalClick } from "./utils/analytics";
 
 import Header from "./components/Header";
 import AdminRoute from "./components/AdminRoute";
@@ -19,6 +21,22 @@ import ManageUsers from "./pages/admin/ManageUsers";
 
 function App() {
   const [user, loading] = useAuthState(auth);
+
+  // This effect attaches the global click listener
+  useEffect(() => {
+    const listener = (event) => {
+      // Pass the event and user's UID to our handler
+      handleGlobalClick(event, user ? user.uid : null);
+    };
+
+    // Listen for 'mousedown' which is often better for tracking clicks
+    document.addEventListener('mousedown', listener);
+
+    // Cleanup: remove the listener when the component unmounts
+    return () => {
+      document.removeEventListener('mousedown', listener);
+    };
+  }, [user]); // Re-run if the user logs in or out
 
   if (loading) {
     return (
