@@ -2,12 +2,15 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "./firebase";
 
+import Header from "./components/Header";
+import AdminRoute from "./components/AdminRoute";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
-import Header from "./components/Header";
 import Courses from "./pages/Courses";
-import CoursePage from './pages/CoursePage';
+import CoursePage from "./pages/CoursePage";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import CreateCourse from "./pages/admin/CreateCourse";
 
 function App() {
   const [user, loading] = useAuthState(auth);
@@ -25,6 +28,8 @@ function App() {
       <Router>
         {user && <Header />} {/* Conditionally render the Header */}
         <Routes>
+          
+          {/* Public and User Routes */}
           {/* If user is logged in, default route is dashboard. Otherwise, it's login. */}
           <Route
             path="/"
@@ -36,6 +41,7 @@ function App() {
             path="/login"
             element={user ? <Navigate to="/dashboard" /> : <Login />}
           />
+
           <Route
             path="/register"
             element={user ? <Navigate to="/dashboard" /> : <Register />}
@@ -55,6 +61,17 @@ function App() {
           <Route
             path="/courses/:courseId"
             element={user ? <CoursePage /> : <Navigate to="/login" />}
+          />
+
+          {/* Admin Routes */}
+          <Route
+            path="/admin"
+            element={<AdminRoute><AdminDashboard /></AdminRoute>}
+          />
+
+          <Route
+            path="/admin/create-course"
+            element={<AdminRoute><CreateCourse /></AdminRoute>}
           />
 
         </Routes>
