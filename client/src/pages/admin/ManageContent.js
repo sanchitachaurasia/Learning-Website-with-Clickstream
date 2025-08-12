@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import Layout from '../../components/Layout';
-import { getFirestore, collection, query, orderBy, getDocs } from 'firebase/firestore';
+import { getFirestore, collection, query, orderBy, getDocs, deleteDoc, doc } from 'firebase/firestore'; // Import deleteDoc
 
 const db = getFirestore();
 
@@ -10,32 +10,44 @@ export default function ManageContent() {
   const [content, setContent] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchContent = async () => {
-      if (!courseId) return;
-      setLoading(true);
-      try {
-        const contentRef = collection(db, 'courses', courseId, 'content');
-        const q = query(contentRef, orderBy('order'));
-        const contentSnapshot = await getDocs(q);
-        const contentData = contentSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        setContent(contentData);
-      } catch (error) {
-        console.error("Error fetching content: ", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchContent = async () => {
+    if (!courseId) return;
+    setLoading(true);
+    try {
+      const contentRef = collection(db, 'courses', courseId, 'content');
+      const q = query(contentRef, orderBy('order'));
+      const contentSnapshot = await getDocs(q);
+      const contentData = contentSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setContent(contentData);
+    } catch (error) {
+      console.error("Error fetching content: ", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchContent();
   }, [courseId]);
 
+  const handleDeleteContent = async (contentId) => {
+    if (window.confirm("Are you sure you want to delete this lesson permanently? This cannot be undone.")) {
+      try {
+        const contentDocRef = doc(db, 'courses', courseId, 'content', contentId);
+        await deleteDoc(contentDocRef);
+        // Refetch content to update the list
+        fetchContent();
+      } catch (error) {
+        console.error("Error deleting content:", error);
+        alert("Failed to delete content.");
+      }
+    }
+  };
+
   const getEditLink = (item) => {
-    // This function will eventually link to different editors based on content type
     if (item.type === 'quiz') {
       return `/admin/course/${courseId}/edit-quiz/${item.id}`;
     }
-    // Add links for editing text or video later
     return '#';
   };
 
@@ -55,12 +67,20 @@ export default function ManageContent() {
                     {item.title}
                   </p>
                 </div>
-                <Link
-                  to={getEditLink(item)}
-                  className={`px-4 py-2 text-sm font-medium text-white rounded-md ${item.type === 'quiz' ? 'bg-green-600 hover:bg-green-700' : 'bg-gray-400 cursor-not-allowed'}`}
-                >
-                  Edit
-                </Link>
+                <div className="flex items-center gap-2">
+                  <Link
+                    to={getEditLink(item)}
+                    className={`px-4 py-2 text-sm font-medium text-white rounded-md ${item.type === 'quiz' ? 'bg-green-600 hover:bg-green-700' : 'bg-gray-400 cursor-not-allowed'}`}
+                  >
+                    Edit
+                  </Link>
+                  <button
+                    onClick={() => handleDeleteContent(item.id)}
+                    className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700"
+                  >
+                    Delete
+                  </button>
+                </div>
               </li>
             ))}
           </ul>
