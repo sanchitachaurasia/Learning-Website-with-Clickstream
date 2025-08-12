@@ -14,8 +14,12 @@ export default function MyAnalytics() {
 
   useEffect(() => {
     const fetchUserData = async () => {
-      if (!user) return;
+      if (!user) {
+        console.log("DEBUG: Effect ran, but no user is logged in yet.");
+        return;
+      }
       setLoading(true);
+      console.log(`DEBUG: Starting fetch for user UID: ${user.uid}`);
 
       try {
         const clickstreamRef = collection(db, 'clickstream');
@@ -27,7 +31,13 @@ export default function MyAnalytics() {
         const querySnapshot = await getDocs(q);
         const userData = querySnapshot.docs.map(doc => doc.data());
 
-        // --- Process Data for Stats ---
+        // --- DIAGNOSTIC LOGS ---
+        console.log(`DEBUG: Firestore query returned ${userData.length} documents.`);
+        if (userData.length > 0) {
+          console.log("DEBUG: First document returned:", userData[0]);
+        }
+        // --- END DIAGNOSTIC LOGS ---
+
         let totalTimeSpent = 0;
         let totalScore = 0;
         let quizCount = 0;
@@ -40,11 +50,13 @@ export default function MyAnalytics() {
           // Calculate average quiz score
           if (event['Event name'] === 'quiz_submit' && event.Score !== null) {
             totalScore += event.Score;
-            quizCount++;
+            // Assuming total questions is 5, adjust if needed
+            const totalQuestions = event.raw_event_data?.totalQuestions || 5; 
+            quizCount += totalQuestions;
           }
         });
 
-        const avgScore = quizCount > 0 ? (totalScore / quizCount) * 100 / 5 : 0; // Assuming quizzes have 5 questions for a % score, adjust as needed
+        const avgScore = quizCount > 0 ? (totalScore / quizCount) * 100 : 0;
 
         setStats({
           totalTime: Math.round(totalTimeSpent / 60), // Convert to minutes

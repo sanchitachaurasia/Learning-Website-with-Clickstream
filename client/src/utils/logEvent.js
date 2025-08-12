@@ -110,7 +110,10 @@ const generateLogDescription = (event) => {
  * @param {object} event - An object containing event details from the analytics handler.
  */
 export const logEvent = async (userId, event) => {
-  if (!userId) return;
+  if (!userId || !event) {
+    console.warn("logEvent called without userId or event data.");
+    return;
+  }
 
   try {
     // 1. Fetch the user's public IP address
@@ -118,6 +121,7 @@ export const logEvent = async (userId, event) => {
     const { ip } = await ipResponse.json();
 
     const firestorePayload = {
+        userId: userId, 
         Time: serverTimestamp(),
         "Event context": event.pathname || window.location.pathname,
         Component: event.component || 'N/A', // We can add data-component attribute later

@@ -3,6 +3,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "./firebase";
 import React, { useEffect } from 'react';
 import { handleGlobalClick } from "./utils/analytics";
+import { useAdmin } from './hooks/useAdmin';
 
 import Header from "./components/Header";
 import AdminRoute from "./components/AdminRoute";
@@ -23,18 +24,19 @@ import MyAnalytics from "./pages/MyAnalytics";
 
 function App() {
   const [user, loading] = useAuthState(auth);
+  const { isAdmin } = useAdmin(); // Use the hook to get admin status
 
   useEffect(() => {
     const listener = (event) => {
-      // Pass the entire user object now, not just the UID
-      handleGlobalClick(event, user);
+      // Pass the user object AND their admin status
+      handleGlobalClick(event, user, isAdmin);
     };
 
     document.addEventListener('mousedown', listener);
     return () => {
       document.removeEventListener('mousedown', listener);
     };
-  }, [user]); // The dependency on `user` is correct
+  }, [user, isAdmin]);
 
   if (loading) {
     return (
