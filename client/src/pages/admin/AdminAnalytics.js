@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import Layout from '../../components/Layout';
-import { getFirestore, collection, getDocs } from 'firebase/firestore';
+import { getFirestore, collection, getDocs, Timestamp } from 'firebase/firestore';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import Papa from 'papaparse'; // Import papaparse
 
 const db = getFirestore();
 
 export default function AdminAnalytics() {
   const [stats, setStats] = useState({ totalUsers: 0, totalCourses: 0, totalEvents: 0 });
   const [eventsByType, setEventsByType] = useState([]);
+  const [rawClickstreamData, setRawClickstreamData] = useState([]); // State to hold raw data for export
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -22,6 +24,7 @@ export default function AdminAnalytics() {
         ]);
 
         const clickstreamData = clickstreamSnapshot.docs.map(doc => doc.data());
+        setRawClickstreamData(clickstreamData); // Save raw data
 
         // Process data for charts
         const eventCounts = clickstreamData.reduce((acc, event) => {
@@ -31,8 +34,8 @@ export default function AdminAnalytics() {
         }, {});
 
         const chartData = Object.keys(eventCounts).map(name => ({
-          name,
-          count: eventCounts[name]
+            name,
+            count: eventCounts[name]
         }));
 
         setEventsByType(chartData);
@@ -51,6 +54,31 @@ export default function AdminAnalytics() {
     fetchData();
   }, []);
 
+  const handleExportCSV = () => {
+    // Sanitize data for CSV export
+    const dataToExport = rawClickstreamData.map(event => {
+        const sanitizedEvent = { ...event };
+        // Convert Firestore Timestamps to readable strings
+        if (sanitizedEvent.Time instanceof Timestamp) {
+            sanitizedEvent.Time = sanitizedEvent.Time.toDate().toISOString();
+        }
+        // Remove raw_event_data if it exists, as it can contain complex objects
+        delete sanitizedEvent.raw_event_data;
+        return sanitizedEvent;
+    });
+
+    const csv = Papa.unparse(dataToExport);
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `clickstream_export_${new Date().toISOString()}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   if (loading) {
     return <Layout><p>Loading analytics dashboard...</p></Layout>;
   }
@@ -59,7 +87,12 @@ export default function AdminAnalytics() {
     <Layout>
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold text-gray-800">System Analytics</h1>
-        {/* Export button will go here */}
+        <button
+          onClick={handleExportCSV}
+          className="px-4 py-2 font-bold text-white bg-green-600 rounded-md hover:bg-green-700"
+        >
+          Export CSV Report
+        </button>
       </div>
 
       {/* Stat Cards */}
