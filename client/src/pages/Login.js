@@ -73,6 +73,7 @@ export default function Login() {
           <div>
             <button
               type="submit"
+              data-analytics-id="login-form-submit"
               className="w-full px-4 py-2 font-bold text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
               Login
@@ -83,6 +84,7 @@ export default function Login() {
           Don't have an account?{' '}
           <Link
             to="/register"
+            data-analytics-id="auth-register-link"
             className="font-medium text-blue-600 hover:underline"
           >
             Register here

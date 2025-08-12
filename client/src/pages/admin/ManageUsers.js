@@ -87,6 +87,10 @@ export default function ManageUsers() {
                     <button
                       onClick={() => handleToggleAdmin(user.id, isAdmin)}
                       disabled={currentUser.uid === user.id}
+                      data-analytics-id="admin-toggle-user-role"
+                      data-target-user-id={user.id}
+                      data-target-user-email={user.email}
+                      data-current-role={isAdmin ? 'admin' : 'user'}
                       className={`px-3 py-1 text-xs font-medium text-white rounded-md disabled:bg-gray-300 disabled:cursor-not-allowed
                         ${isAdmin ? 'bg-yellow-600 hover:bg-yellow-700' : 'bg-green-600 hover:bg-green-700'}`
                       }

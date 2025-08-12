@@ -23,7 +23,7 @@ export default function Header() {
   return (
     <header className="bg-white shadow-md">
       <nav className="container mx-auto px-6 py-3 flex justify-between items-center">
-        <Link to="/dashboard" className="text-xl font-bold text-gray-800">
+        <Link to="/dashboard" data-analytics-id="nav-brand-logo" className="text-xl font-bold text-gray-800">
           LearnX
         </Link>
 
@@ -34,7 +34,7 @@ export default function Header() {
           <Link to="/courses" data-analytics-id="nav-all-courses" className="text-gray-600 hover:text-blue-600 px-3 py-2 rounded">
             All Courses
           </Link>
-          <Link to="/my-analytics" className="text-gray-600 hover:text-blue-600 px-3 py-2 rounded">
+          <Link to="/my-analytics" data-analytics-id="nav-my-analytics" className="text-gray-600 hover:text-blue-600 px-3 py-2 rounded">
             My Analytics
           </Link>
           {/* Conditionally render the Admin link */}

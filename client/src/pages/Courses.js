@@ -88,6 +88,9 @@ export default function Courses() {
                 </div>
                 <button
                   onClick={() => isRegistered ? handleDeregister(course.id) : handleRegister(course.id)}
+                  data-analytics-id={isRegistered ? "course-deregister-button" : "course-register-button"}
+                  data-course-id={course.id}
+                  data-course-title={course.title}
                   className={`w-full mt-4 px-4 py-2 font-bold text-white rounded-md ${
                     isRegistered
                       ? 'bg-red-500 hover:bg-red-600'

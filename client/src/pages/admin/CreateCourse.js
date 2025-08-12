@@ -78,6 +78,7 @@ export default function CreateCourse() {
             <button
               type="submit"
               disabled={isSubmitting}
+              data-analytics-id="create-course-form-submit"
               className="w-full px-4 py-2 font-bold text-white bg-blue-600 rounded-md hover:bg-blue-700 disabled:bg-gray-400"
             >
               {isSubmitting ? 'Creating...' : 'Create Course'}

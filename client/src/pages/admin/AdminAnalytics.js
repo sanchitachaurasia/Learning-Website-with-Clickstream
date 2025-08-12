@@ -89,6 +89,7 @@ export default function AdminAnalytics() {
         <h1 className="text-3xl font-bold text-gray-800">System Analytics</h1>
         <button
           onClick={handleExportCSV}
+          data-analytics-id="admin-export-csv"
           className="px-4 py-2 font-bold text-white bg-green-600 rounded-md hover:bg-green-700"
         >
           Export CSV Report

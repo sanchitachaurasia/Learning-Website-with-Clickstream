@@ -84,6 +84,7 @@ export default function Register() {
           <div>
             <button
               type="submit"
+              data-analytics-id="register-form-submit"
               className="w-full px-4 py-2 font-bold text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
               Register
@@ -94,6 +95,7 @@ export default function Register() {
           Already have an account?{' '}
           <Link
             to="/login"
+            data-analytics-id="auth-login-link"
             className="font-medium text-blue-600 hover:underline"
           >
             Login here

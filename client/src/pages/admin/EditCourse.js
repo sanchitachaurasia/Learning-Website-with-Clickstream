@@ -96,6 +96,9 @@ export default function EditCourse() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
+                  data-analytics-id="edit-course-form-submit"
+                  data-course-id={courseId}
+                  data-course-title={title}
                   className="w-full px-4 py-2 font-bold text-white bg-blue-600 rounded-md hover:bg-blue-700 disabled:bg-gray-400"
                 >
                   {isSubmitting ? 'Saving...' : 'Save Changes'}
@@ -108,7 +111,7 @@ export default function EditCourse() {
             <div className="bg-white p-6 rounded-lg shadow-lg">
                 <h3 className="text-lg font-bold text-gray-900">Manage Content</h3>
                 <p className="text-sm text-gray-600 mt-2 mb-4">Edit the lessons, quizzes, and videos for this course.</p>
-                <Link to={`/admin/course/${courseId}/manage-content`} className="block w-full text-center px-4 py-2 font-bold text-white bg-gray-700 rounded-md hover:bg-gray-800">
+                <Link to={`/admin/course/${courseId}/manage-content`} data-analytics-id="admin-manage-content-link" data-course-id={courseId} data-course-title={title} className="block w-full text-center px-4 py-2 font-bold text-white bg-gray-700 rounded-md hover:bg-gray-800">
                     Manage Course Content
                 </Link>
             </div>

@@ -106,7 +106,7 @@ export default function EditQuiz() {
 
             {quizData.questions.map((q, qIndex) => (
               <div key={qIndex} className="p-6 border border-gray-200 rounded-lg relative">
-                <button type="button" onClick={() => removeQuestion(qIndex)} className="absolute top-2 right-2 px-2 py-1 text-xs font-bold text-white bg-red-600 rounded-md hover:bg-red-700">&times;</button>
+                <button type="button" onClick={() => removeQuestion(qIndex)} data-analytics-id="quiz-remove-question" data-question-index={qIndex} data-course-id={courseId} className="absolute top-2 right-2 px-2 py-1 text-xs font-bold text-white bg-red-600 rounded-md hover:bg-red-700">&times;</button>
 
                 <div className="grid grid-cols-2 gap-4">
                     <div>
@@ -155,11 +155,11 @@ export default function EditQuiz() {
               </div>
             ))}
 
-            <div className="pt-4"><button type="button" onClick={addQuestion} className="w-full px-6 py-2 font-semibold text-blue-600 border-2 border-dashed border-blue-400 rounded-md hover:bg-blue-50">+ Add Question</button></div>
+            <div className="pt-4"><button type="button" onClick={addQuestion} data-analytics-id="quiz-add-question" data-course-id={courseId} className="w-full px-6 py-2 font-semibold text-blue-600 border-2 border-dashed border-blue-400 rounded-md hover:bg-blue-50">+ Add Question</button></div>
             <div className="pt-6 border-t">
               {error && <p className="text-sm text-red-600 mb-4">{error}</p>}
               {success && <p className="text-sm text-green-600 mb-4">{success}</p>}
-              <button type="submit" disabled={isSubmitting} className="w-full px-6 py-3 font-bold text-white bg-blue-600 rounded-md hover:bg-blue-700 disabled:bg-gray-400">{isSubmitting ? 'Saving...' : 'Save All Changes'}</button>
+              <button type="submit" disabled={isSubmitting} data-analytics-id="edit-quiz-form-submit" data-course-id={courseId} className="w-full px-6 py-3 font-bold text-white bg-blue-600 rounded-md hover:bg-blue-700 disabled:bg-gray-400">{isSubmitting ? 'Saving...' : 'Save All Changes'}</button>
             </div>
           </form>
         </div>

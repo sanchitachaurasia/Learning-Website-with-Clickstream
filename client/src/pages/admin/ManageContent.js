@@ -70,12 +70,20 @@ export default function ManageContent() {
                 <div className="flex items-center gap-2">
                   <Link
                     to={getEditLink(item)}
+                    data-analytics-id="admin-edit-content-link"
+                    data-content-id={item.id}
+                    data-content-type={item.type}
+                    data-course-id={courseId}
                     className={`px-4 py-2 text-sm font-medium text-white rounded-md ${item.type === 'quiz' ? 'bg-green-600 hover:bg-green-700' : 'bg-gray-400 cursor-not-allowed'}`}
                   >
                     Edit
                   </Link>
                   <button
                     onClick={() => handleDeleteContent(item.id)}
+                    data-analytics-id="admin-delete-content-button"
+                    data-content-id={item.id}
+                    data-content-type={item.type}
+                    data-course-id={courseId}
                     className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700"
                   >
                     Delete

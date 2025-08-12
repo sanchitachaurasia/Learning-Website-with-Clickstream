@@ -59,7 +59,7 @@ export default function ManageCourses() {
     <Layout>
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold text-gray-800">Manage Courses</h1>
-        <Link to="/admin/create-course" className="px-4 py-2 font-bold text-white bg-blue-600 rounded-md hover:bg-blue-700">
+        <Link to="/admin/create-course" data-analytics-id="admin-create-course-link" className="px-4 py-2 font-bold text-white bg-blue-600 rounded-md hover:bg-blue-700">
           + Create New Course
         </Link>
       </div>
@@ -77,12 +77,18 @@ export default function ManageCourses() {
                 <div className="flex items-center gap-2">
                     <Link
                       to={`/admin/edit-course/${course.id}`}
+                      data-analytics-id="admin-edit-course-link"
+                      data-course-id={course.id}
+                      data-course-title={course.title}
                       className="px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-md hover:bg-green-700"
                     >
                       Edit
                     </Link>
                     <button
                       onClick={() => handleDeleteCourse(course.id)}
+                      data-analytics-id="admin-delete-course-button"
+                      data-course-id={course.id}
+                      data-course-title={course.title}
                       className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700"
                     >
                       Delete
