@@ -19,6 +19,7 @@ import ManageContent from "./pages/admin/ManageContent";
 import EditQuiz from "./pages/admin/EditQuiz";
 import ManageUsers from "./pages/admin/ManageUsers";
 import AdminAnalytics from "./pages/admin/AdminAnalytics";
+import MyAnalytics from "./pages/MyAnalytics";
 
 function App() {
   const [user, loading] = useAuthState(auth);
@@ -122,6 +123,11 @@ function App() {
           <Route 
             path="/admin/analytics" 
             element={<AdminRoute><AdminAnalytics /></AdminRoute>} 
+          />
+
+          <Route 
+            path="/my-analytics" 
+            element={user ? <MyAnalytics /> : <Navigate to="/login" />} 
           />
 
         </Routes>

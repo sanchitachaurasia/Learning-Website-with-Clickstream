@@ -34,6 +34,9 @@ export default function Header() {
           <Link to="/courses" data-analytics-id="nav-all-courses" className="text-gray-600 hover:text-blue-600 px-3 py-2 rounded">
             All Courses
           </Link>
+          <Link to="/my-analytics" className="text-gray-600 hover:text-blue-600 px-3 py-2 rounded">
+            My Analytics
+          </Link>
           {/* Conditionally render the Admin link */}
           {isAdmin && (
             <Link to="/admin" data-analytics-id="nav-admin" className="text-red-600 font-bold hover:text-red-800 px-3 py-2 rounded">
