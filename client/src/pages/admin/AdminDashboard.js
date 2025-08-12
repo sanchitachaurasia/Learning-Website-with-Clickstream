@@ -15,6 +15,10 @@ export default function AdminDashboard() {
           <h2 className="text-xl font-bold text-gray-900">Manage Users</h2>
           <p className="text-gray-600 mt-2">View registered users and manage admin roles.</p>
         </Link>
+        <Link to="/admin/analytics" className="block p-6 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow">
+          <h2 className="text-xl font-bold text-gray-900">View Analytics</h2>
+          <p className="text-gray-600 mt-2">Check system-wide statistics and export reports.</p>
+        </Link>
       </div>
     </Layout>
   );

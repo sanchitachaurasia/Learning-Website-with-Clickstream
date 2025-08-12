@@ -18,6 +18,7 @@ import EditCourse from "./pages/admin/EditCourse";
 import ManageContent from "./pages/admin/ManageContent";
 import EditQuiz from "./pages/admin/EditQuiz";
 import ManageUsers from "./pages/admin/ManageUsers";
+import AdminAnalytics from "./pages/admin/AdminAnalytics";
 
 function App() {
   const [user, loading] = useAuthState(auth);
@@ -116,6 +117,11 @@ function App() {
           <Route 
             path="/admin/manage-users"
             element={<AdminRoute><ManageUsers /></AdminRoute>} 
+          />
+
+          <Route 
+            path="/admin/analytics" 
+            element={<AdminRoute><AdminAnalytics /></AdminRoute>} 
           />
 
         </Routes>
