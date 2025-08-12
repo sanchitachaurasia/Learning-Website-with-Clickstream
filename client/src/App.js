@@ -14,6 +14,7 @@ import CreateCourse from "./pages/admin/CreateCourse";
 import ManageCourses from "./pages/admin/ManageCourses";
 import EditCourse from "./pages/admin/EditCourse";
 import ManageContent from "./pages/admin/ManageContent";
+import EditQuiz from "./pages/admin/EditQuiz";
 
 function App() {
   const [user, loading] = useAuthState(auth);
@@ -90,6 +91,11 @@ function App() {
           <Route 
             path="/admin/course/:courseId/manage-content" 
             element={<AdminRoute><ManageContent /></AdminRoute>} 
+          />
+
+          <Route
+            path="/admin/course/:courseId/edit-quiz/:contentId" 
+            element={<AdminRoute><EditQuiz /></AdminRoute>} 
           />
 
         </Routes>
