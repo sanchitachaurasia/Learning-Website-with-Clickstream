@@ -13,6 +13,7 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import CreateCourse from "./pages/admin/CreateCourse";
 import ManageCourses from "./pages/admin/ManageCourses";
 import EditCourse from "./pages/admin/EditCourse";
+import ManageContent from "./pages/admin/ManageContent";
 
 function App() {
   const [user, loading] = useAuthState(auth);
@@ -84,6 +85,11 @@ function App() {
           <Route 
             path="/admin/edit-course/:courseId" 
             element={<AdminRoute><EditCourse /></AdminRoute>} 
+          />
+
+          <Route 
+            path="/admin/course/:courseId/manage-content" 
+            element={<AdminRoute><ManageContent /></AdminRoute>} 
           />
 
         </Routes>
