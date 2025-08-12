@@ -11,6 +11,8 @@ import Courses from "./pages/Courses";
 import CoursePage from "./pages/CoursePage";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import CreateCourse from "./pages/admin/CreateCourse";
+import ManageCourses from "./pages/admin/ManageCourses";
+import EditCourse from "./pages/admin/EditCourse";
 
 function App() {
   const [user, loading] = useAuthState(auth);
@@ -28,7 +30,7 @@ function App() {
       <Router>
         {user && <Header />} {/* Conditionally render the Header */}
         <Routes>
-          
+
           {/* Public and User Routes */}
           {/* If user is logged in, default route is dashboard. Otherwise, it's login. */}
           <Route
@@ -72,6 +74,16 @@ function App() {
           <Route
             path="/admin/create-course"
             element={<AdminRoute><CreateCourse /></AdminRoute>}
+          />
+
+          <Route 
+            path="/admin/manage-courses" 
+            element={<AdminRoute><ManageCourses /></AdminRoute>} 
+          />
+
+          <Route 
+            path="/admin/edit-course/:courseId" 
+            element={<AdminRoute><EditCourse /></AdminRoute>} 
           />
 
         </Routes>
