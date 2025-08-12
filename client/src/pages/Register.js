@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebase';
+import { logEvent } from '../utils/logEvent'; // Import the logger
 
 export default function Register() {
   const [email, setEmail] = useState('');
@@ -19,7 +20,17 @@ export default function Register() {
     }
 
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+
+      if (userCredential.user) {
+        const user = userCredential.user;
+        logEvent(user.uid, {
+          eventType: 'auth',
+          analyticsId: 'register_success',
+          userEmail: user.email,
+        });
+      }
+
       navigate('/login'); // Redirect to login after successful registration
     } catch (err) {
       if (err.code === 'auth/weak-password') {
