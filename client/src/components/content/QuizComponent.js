@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 
-export default function QuizComponent({ data, courseId, courseTitle, user }) {
-  // The answers state now holds strings or numbers directly from the user's input.
+export default function QuizComponent({ data, courseId, user }) {
   const [answers, setAnswers] = useState(Array(data.questions.length).fill(''));
   const [submitted, setSubmitted] = useState(false);
   const [score, setScore] = useState(0);
@@ -30,7 +29,7 @@ export default function QuizComponent({ data, courseId, courseTitle, user }) {
         calculatedScore++;
       }
     });
-    
+
     setScore(calculatedScore);
     setSubmitted(true);
   };
@@ -50,9 +49,15 @@ export default function QuizComponent({ data, courseId, courseTitle, user }) {
                   key={optionIndex}
                   onClick={() => handleInputChange(qIndex, optionIndex)}
                   disabled={submitted}
+                  data-analytics-id="quiz-option-select"
+                  data-course-id={courseId}
+                  data-content-id={data.id}
+                  data-question-index={qIndex}
+                  data-option-index={optionIndex}
+                  data-option-text={option}
                   className={`px-4 py-2 rounded-md border transition-colors
-                    ${isCorrectAnswer ? 'bg-green-200 border-green-400 text-green-800' : ''}
-                    ${isWrongSelection ? 'bg-red-200 border-red-400 text-red-800' : ''}
+                    ${isCorrectAnswer ? 'bg-green-200 border-green-400' : ''}
+                    ${isWrongSelection ? 'bg-red-200 border-red-400' : ''}
                     ${!submitted && isSelected ? 'bg-blue-200 border-blue-400' : ''}
                     ${!submitted && !isSelected ? 'bg-white hover:bg-gray-100' : ''}
                     ${submitted ? 'cursor-not-allowed' : 'cursor-default'}`
@@ -101,8 +106,7 @@ export default function QuizComponent({ data, courseId, courseTitle, user }) {
           data-analytics-id="quiz-submit-button"
           data-course-id={courseId}
           data-content-id={data.id}
-          data-course-title={courseTitle} // Add this attribute
-          className="..."
+          className="w-full px-4 py-2 mt-4 font-bold text-white bg-blue-600 rounded-md hover:bg-blue-700"
         >
           Submit Quiz
         </button>

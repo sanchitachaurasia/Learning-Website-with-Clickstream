@@ -12,6 +12,11 @@ const generateLogDescription = (event) => {
   const userId = event.userId || userEmail; // Fallback to email if ID is missing
 
   switch (analyticsId) {
+    case 'login_success':
+      return `The user with email '${userEmail}' successfully logged in.`;
+    case 'quiz-option-select':
+      return `The user '${userId}' selected option '${event.optionText}' for question ${Number(event.questionIndex) + 1} in course '${courseTitle}'.`;
+
     case 'nav-dashboard':
       return `The user '${userId}' navigated to the Dashboard.`;
     case 'nav-all-courses':
@@ -25,7 +30,7 @@ const generateLogDescription = (event) => {
     case 'completion-button':
       return `The user '${userId}' marked content in course '${courseTitle}' as ${event.completedStatus === 'true' ? 'incomplete' : 'complete'}.`;
     case 'quiz-submit-button':
-      return `The user '${userId}' submitted the quiz '${elementText}' in course '${courseTitle}'.`;
+      return `The user '${userId}' submitted the quiz in course '${courseTitle}'.`;
     case 'video-player':
       return `The user '${userId}' interacted with a video player in course '${courseTitle}'.`;
     default:

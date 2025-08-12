@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebase';
+import { logEvent } from '../utils/logEvent'; // Import the logger
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -14,7 +15,17 @@ export default function Login() {
     setError('');
 
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+
+      if (userCredential.user) {
+        const user = userCredential.user;
+        logEvent(user.uid, {
+          eventType: 'auth', // Use a specific eventType for auth events
+          analyticsId: 'login_success',
+          userEmail: user.email,
+        });
+      }
+
       navigate('/dashboard'); // Redirect to dashboard after successful login
     } catch (err) {
       setError('Invalid email or password. Please try again.');
