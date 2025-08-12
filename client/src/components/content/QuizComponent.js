@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import { logEvent } from '../../utils/logEvent'; // Import the logger
 
-export default function QuizComponent({ data, courseId, user }) { // Accept new props
-  const [answers, setAnswers] = useState(Array(data.questions.length).fill(null));
+export default function QuizComponent({ data, courseId, user }) {
+  // The answers state now holds strings or numbers directly
+  const [answers, setAnswers] = useState(Array(data.questions.length).fill(''));
   const [submitted, setSubmitted] = useState(false);
   const [score, setScore] = useState(0);
 
-  const handleSelectAnswer = (qIndex, optionIndex) => {
+  const handleInputChange = (qIndex, value) => {
     if (submitted) return;
     const newAnswers = [...answers];
-    newAnswers[qIndex] = optionIndex;
+    newAnswers[qIndex] = value;
     setAnswers(newAnswers);
   };
 
@@ -17,10 +18,20 @@ export default function QuizComponent({ data, courseId, user }) { // Accept new 
     if (submitted) return;
     let calculatedScore = 0;
     data.questions.forEach((q, i) => {
-      if (answers[i] === q.correctIndex) {
+      let isCorrect = false;
+      if (q.type === 'multiple_choice') {
+        isCorrect = answers[i] === q.correctIndex;
+      } else if (q.type === 'number_input') {
+        isCorrect = Number(answers[i]) === Number(q.correctAnswer);
+      } else { // text_input
+        isCorrect = answers[i].trim().toLowerCase() === q.correctAnswer.trim().toLowerCase();
+      }
+
+      if (isCorrect) {
         calculatedScore++;
       }
     });
+
     setScore(calculatedScore);
     setSubmitted(true);
 
@@ -35,56 +46,74 @@ export default function QuizComponent({ data, courseId, user }) { // Accept new 
     }
   };
 
-  return (
-    <div className="border-t border-gray-200 mt-4 pt-4">
-      {data.questions.map((q, qIndex) => (
-        <div key={qIndex} className="mb-6">
-          <p className="font-semibold mb-2">
-            {qIndex + 1}. {q.question}
-          </p>
+  const renderQuestionInput = (q, qIndex) => {
+    switch (q.type) {
+      case 'multiple_choice':
+        return (
           <div className="flex flex-wrap gap-2">
             {q.options.map((option, optionIndex) => {
               const isSelected = answers[qIndex] === optionIndex;
-              const isCorrect = submitted && optionIndex === q.correctIndex;
-              const isWrong = submitted && isSelected && !isCorrect;
+              const isCorrectAnswer = submitted && optionIndex === q.correctIndex;
+              const isWrongSelection = submitted && isSelected && !isCorrectAnswer;
 
               return (
                 <button
                   key={optionIndex}
-                  onClick={() => handleSelectAnswer(qIndex, optionIndex)}
+                  onClick={() => handleInputChange(qIndex, optionIndex)}
                   disabled={submitted}
                   className={`px-4 py-2 rounded-md border transition-colors
-                    ${isCorrect ? 'bg-green-200 border-green-400 text-green-800' : ''}
-                    ${isWrong ? 'bg-red-200 border-red-400 text-red-800' : ''}
+                    ${isCorrectAnswer ? 'bg-green-200 border-green-400' : ''}
+                    ${isWrongSelection ? 'bg-red-200 border-red-400' : ''}
                     ${!submitted && isSelected ? 'bg-blue-200 border-blue-400' : ''}
                     ${!submitted && !isSelected ? 'bg-white hover:bg-gray-100' : ''}
-                    ${submitted ? 'cursor-not-allowed' : 'cursor-pointer'}
-                  `}
-                >
-                  {option}
-                </button>
+                    ${submitted ? 'cursor-not-allowed' : 'cursor-default'}`
+                  }
+                >{option}</button>
               );
             })}
           </div>
+        );
+      case 'number_input':
+        return (
+          <input
+            type="number"
+            value={answers[qIndex]}
+            onChange={(e) => handleInputChange(qIndex, e.target.value)}
+            disabled={submitted}
+            className="px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm w-full md:w-1/2"
+          />
+        );
+      case 'text_input':
+      default:
+        return (
+          <input
+            type="text"
+            value={answers[qIndex]}
+            onChange={(e) => handleInputChange(qIndex, e.target.value)}
+            disabled={submitted}
+            className="px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm w-full"
+          />
+        );
+    }
+  };
+
+  return (
+    <div className="border-t border-gray-200 mt-4 pt-4">
+      {data.questions.map((q, qIndex) => (
+        <div key={qIndex} className="mb-6">
+          <p className="font-semibold mb-2">{qIndex + 1}. {q.question}</p>
+          {renderQuestionInput(q, qIndex)}
         </div>
       ))}
 
       {!submitted && (
-        <button
-          onClick={handleSubmit}
-          disabled={answers.includes(null)}
-          className="w-full px-4 py-2 mt-4 font-bold text-white bg-blue-600 rounded-md hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
-        >
-          Submit Quiz
-        </button>
+        <button onClick={handleSubmit} className="w-full px-4 py-2 mt-4 font-bold text-white bg-blue-600 rounded-md hover:bg-blue-700">Submit Quiz</button>
       )}
 
       {submitted && (
         <div className="mt-6 p-4 bg-gray-100 rounded-lg text-center">
           <h4 className="text-xl font-bold">Quiz Complete!</h4>
-          <p className="text-lg mt-2">
-            Your score: {score} / {data.questions.length}
-          </p>
+          <p className="text-lg mt-2">Your score: {score} / {data.questions.length}</p>
         </div>
       )}
     </div>
