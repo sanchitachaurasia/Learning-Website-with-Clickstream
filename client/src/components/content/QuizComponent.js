@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-export default function QuizComponent({ data, courseId, user }) {
+export default function QuizComponent({ data, courseId, courseTitle, user }) {
   // The answers state now holds strings or numbers directly from the user's input.
   const [answers, setAnswers] = useState(Array(data.questions.length).fill(''));
   const [submitted, setSubmitted] = useState(false);
@@ -101,7 +101,8 @@ export default function QuizComponent({ data, courseId, user }) {
           data-analytics-id="quiz-submit-button"
           data-course-id={courseId}
           data-content-id={data.id}
-          className="w-full px-4 py-2 mt-4 font-bold text-white bg-blue-600 rounded-md hover:bg-blue-700"
+          data-course-title={courseTitle} // Add this attribute
+          className="..."
         >
           Submit Quiz
         </button>

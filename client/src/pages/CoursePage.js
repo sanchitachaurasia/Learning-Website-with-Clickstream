@@ -76,11 +76,9 @@ export default function CoursePage() {
     });
   };
 
-  return (
+return (
     <Layout>
-      {loading ? (
-        <p>Loading course details...</p>
-      ) : course ? (
+      {loading ? ( <p>Loading...</p> ) : course ? (
         <div>
           <h1 className="text-4xl font-bold text-gray-900">{course.title}</h1>
           <p className="text-lg text-gray-600 mt-4">{course.description}</p>
@@ -93,28 +91,26 @@ export default function CoursePage() {
                   return (
                     <li key={item.id} className="p-6 bg-white rounded-lg shadow">
                       <h3 className="text-xl font-semibold mb-3">{item.title}</h3>
+                      {/* Pass courseTitle down to each component */}
                       {item.type === 'text' && <TextContent data={item} />}
-                      {item.type === 'video' && <VideoContent data={item} courseId={courseId} user={user} />}
-                      {item.type === 'quiz' && <QuizComponent data={item} courseId={courseId} user={user} />}
+                      {item.type === 'video' && <VideoContent data={item} courseId={courseId} courseTitle={course.title} user={user} />}
+                      {item.type === 'quiz' && <QuizComponent data={item} courseId={courseId} courseTitle={course.title} user={user} />}
                       <CompletionButton
                         user={user}
                         courseId={courseId}
                         contentId={item.id}
                         isCompleted={isCompleted}
                         onUpdate={handleProgressUpdate}
+                        courseTitle={course.title} // Pass courseTitle
                       />
                     </li>
                   );
                 })}
               </ul>
-            ) : (
-              <p>No content has been added to this course yet.</p>
-            )}
+            ) : ( <p>No content...</p> )}
           </div>
         </div>
-      ) : (
-        <p>Course not found.</p>
-      )}
+      ) : ( <p>Course not found.</p> )}
     </Layout>
   );
 }

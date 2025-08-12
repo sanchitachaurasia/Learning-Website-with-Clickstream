@@ -3,7 +3,7 @@ import { getFirestore, doc, setDoc, arrayUnion, arrayRemove } from 'firebase/fir
 
 const db = getFirestore();
 
-export default function CompletionButton({ user, courseId, contentId, isCompleted, onUpdate }) {
+export default function CompletionButton({ user, courseId, contentId, isCompleted, onUpdate, courseTitle }) {
   const handleToggleComplete = async () => {
     if (!user) return;
     
@@ -35,11 +35,8 @@ export default function CompletionButton({ user, courseId, contentId, isComplete
         data-course-id={courseId}
         data-content-id={contentId}
         data-completed-status={isCompleted}
-        className={`px-4 py-2 text-sm font-semibold rounded-full transition-colors ${
-          isCompleted
-            ? 'bg-green-100 text-green-800 hover:bg-green-200'
-            : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-        }`}
+        data-course-title={courseTitle} // Add this attribute
+        className={`...`}
       >
         {isCompleted ? '✅ Completed' : 'Mark as Complete'}
       </button>

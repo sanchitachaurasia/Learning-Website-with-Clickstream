@@ -22,21 +22,17 @@ import ManageUsers from "./pages/admin/ManageUsers";
 function App() {
   const [user, loading] = useAuthState(auth);
 
-  // This effect attaches the global click listener
   useEffect(() => {
     const listener = (event) => {
-      // Pass the event and user's UID to our handler
-      handleGlobalClick(event, user ? user.uid : null);
+      // Pass the entire user object now, not just the UID
+      handleGlobalClick(event, user);
     };
 
-    // Listen for 'mousedown' which is often better for tracking clicks
     document.addEventListener('mousedown', listener);
-
-    // Cleanup: remove the listener when the component unmounts
     return () => {
       document.removeEventListener('mousedown', listener);
     };
-  }, [user]); // Re-run if the user logs in or out
+  }, [user]); // The dependency on `user` is correct
 
   if (loading) {
     return (
