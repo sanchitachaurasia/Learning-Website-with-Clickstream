@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Layout from '../../components/Layout';
-import { getFirestore, doc, getDoc } from 'firebase/firestore';
+import { getFirestore, doc, getDoc, updateDoc } from 'firebase/firestore'; // updateDoc is needed
 
 const db = getFirestore();
 
@@ -11,7 +11,9 @@ export default function EditQuiz() {
 
   const [quizData, setQuizData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
   useEffect(() => {
     const fetchQuiz = async () => {
@@ -34,6 +36,7 @@ export default function EditQuiz() {
     fetchQuiz();
   }, [courseId, contentId]);
 
+  // --- Handler functions remain the same ---
   const handleQuestionTextChange = (qIndex, newText) => {
     const updatedQuestions = [...quizData.questions];
     updatedQuestions[qIndex].question = newText;
@@ -52,6 +55,24 @@ export default function EditQuiz() {
     setQuizData({ ...quizData, questions: updatedQuestions });
   }
 
+  // --- Add the submit handler ---
+  const handleUpdateQuiz = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setError('');
+    setSuccess('');
+    try {
+      const quizDocRef = doc(db, 'courses', courseId, 'content', contentId);
+      await updateDoc(quizDocRef, quizData);
+      setSuccess('Quiz updated successfully!');
+    } catch (err) {
+      setError('Failed to update quiz.');
+      console.error(err);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   if (loading) {
     return <Layout><p>Loading quiz editor...</p></Layout>;
   }
@@ -65,7 +86,8 @@ export default function EditQuiz() {
       <h1 className="text-3xl font-bold text-gray-800 mb-6">Edit Quiz</h1>
       {quizData && (
         <div className="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-lg">
-          <form className="space-y-8">
+          <form onSubmit={handleUpdateQuiz} className="space-y-8">
+            {/* --- Quiz Title and Questions mapping remains the same --- */}
             <div>
               <label htmlFor="quizTitle" className="block text-lg font-medium text-gray-700">Quiz Title</label>
               <input
@@ -114,7 +136,18 @@ export default function EditQuiz() {
               </div>
             ))}
 
-            {/* The Save button will be added in the next step */}
+            {/* --- Add submission button and messages --- */}
+            <div className="pt-6 border-t">
+              {error && <p className="text-sm text-red-600 mb-4">{error}</p>}
+              {success && <p className="text-sm text-green-600 mb-4">{success}</p>}
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full px-6 py-3 font-bold text-white bg-blue-600 rounded-md hover:bg-blue-700 disabled:bg-gray-400"
+              >
+                {isSubmitting ? 'Saving...' : 'Save All Changes'}
+              </button>
+            </div>
           </form>
         </div>
       )}
