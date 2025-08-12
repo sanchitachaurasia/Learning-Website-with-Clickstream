@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { logEvent } from '../../utils/logEvent'; // Import the logger
 
 export default function QuizComponent({ data, courseId, user }) {
-  // The answers state now holds strings or numbers directly
+  // The answers state now holds strings or numbers directly from the user's input.
   const [answers, setAnswers] = useState(Array(data.questions.length).fill(''));
   const [submitted, setSubmitted] = useState(false);
   const [score, setScore] = useState(0);
@@ -31,19 +30,9 @@ export default function QuizComponent({ data, courseId, user }) {
         calculatedScore++;
       }
     });
-
+    
     setScore(calculatedScore);
     setSubmitted(true);
-
-    if (user) {
-      logEvent(user.uid, {
-        eventType: 'quiz_submit',
-        courseId: courseId,
-        contentId: data.id,
-        score: calculatedScore,
-        totalQuestions: data.questions.length
-      });
-    }
   };
 
   const renderQuestionInput = (q, qIndex) => {
@@ -62,8 +51,8 @@ export default function QuizComponent({ data, courseId, user }) {
                   onClick={() => handleInputChange(qIndex, optionIndex)}
                   disabled={submitted}
                   className={`px-4 py-2 rounded-md border transition-colors
-                    ${isCorrectAnswer ? 'bg-green-200 border-green-400' : ''}
-                    ${isWrongSelection ? 'bg-red-200 border-red-400' : ''}
+                    ${isCorrectAnswer ? 'bg-green-200 border-green-400 text-green-800' : ''}
+                    ${isWrongSelection ? 'bg-red-200 border-red-400 text-red-800' : ''}
                     ${!submitted && isSelected ? 'bg-blue-200 border-blue-400' : ''}
                     ${!submitted && !isSelected ? 'bg-white hover:bg-gray-100' : ''}
                     ${submitted ? 'cursor-not-allowed' : 'cursor-default'}`
@@ -107,7 +96,15 @@ export default function QuizComponent({ data, courseId, user }) {
       ))}
 
       {!submitted && (
-        <button onClick={handleSubmit} className="w-full px-4 py-2 mt-4 font-bold text-white bg-blue-600 rounded-md hover:bg-blue-700">Submit Quiz</button>
+        <button
+          onClick={handleSubmit}
+          data-analytics-id="quiz-submit-button"
+          data-course-id={courseId}
+          data-content-id={data.id}
+          className="w-full px-4 py-2 mt-4 font-bold text-white bg-blue-600 rounded-md hover:bg-blue-700"
+        >
+          Submit Quiz
+        </button>
       )}
 
       {submitted && (

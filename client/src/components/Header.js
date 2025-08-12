@@ -28,15 +28,15 @@ export default function Header() {
         </Link>
 
         <div className="flex items-center">
-          <Link to="/dashboard" className="text-gray-600 hover:text-blue-600 px-3 py-2 rounded">
+          <Link to="/dashboard" data-analytics-id="nav-dashboard" className="text-gray-600 hover:text-blue-600 px-3 py-2 rounded">
             Dashboard
           </Link>
-          <Link to="/courses" className="text-gray-600 hover:text-blue-600 px-3 py-2 rounded">
+          <Link to="/courses" data-analytics-id="nav-all-courses" className="text-gray-600 hover:text-blue-600 px-3 py-2 rounded">
             All Courses
           </Link>
           {/* Conditionally render the Admin link */}
           {isAdmin && (
-            <Link to="/admin" className="text-red-600 font-bold hover:text-red-800 px-3 py-2 rounded">
+            <Link to="/admin" data-analytics-id="nav-admin" className="text-red-600 font-bold hover:text-red-800 px-3 py-2 rounded">
               Admin
             </Link>
           )}
@@ -47,6 +47,7 @@ export default function Header() {
             <span className="text-gray-700 text-sm mr-4">{user.email}</span>
             <button
               onClick={handleLogout}
+              data-analytics-id="logout-button"
               className="px-4 py-2 text-sm font-medium text-white bg-red-500 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
             >
               Logout

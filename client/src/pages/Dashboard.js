@@ -64,7 +64,7 @@ export default function Dashboard() {
             const progressPercentage = Math.round((completedCount / totalContent) * 100);
 
             return (
-              <Link to={`/courses/${course.id}`} key={course.id} className="block bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+              <Link to={`/courses/${course.id}`} key={course.id} data-analytics-id="dashboard-course-card" data-course-id={course.id} data-course-title={course.title} className="block bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
                 <div className="p-6">
                   <h2 className="text-xl font-bold text-gray-900 truncate">{course.title}</h2>
                   <p className="text-gray-600 mt-2 h-10 overflow-hidden text-sm">{course.description}</p>

@@ -11,16 +11,9 @@ export default function VideoContent({ data, courseId, user }) {
     },
   };
 
-  const handlePlay = () => {
-    if (user) {
-      logEvent(user.uid, {
-        eventType: 'video_play',
-        courseId: courseId,
-        contentId: data.id,
-        videoTitle: data.title
-      });
-    }
-  };
-
-  return <YouTube videoId={data.youtubeId} opts={opts} onPlay={handlePlay} />;
+  return (
+      <div data-analytics-id="video-player" data-video-id={data.youtubeId}>
+          <YouTube videoId={data.youtubeId} opts={opts} />
+      </div>
+  );
 }

@@ -31,6 +31,10 @@ export default function CompletionButton({ user, courseId, contentId, isComplete
     <div className="text-right mt-4">
       <button
         onClick={handleToggleComplete}
+        data-analytics-id="completion-button"
+        data-course-id={courseId}
+        data-content-id={contentId}
+        data-completed-status={isCompleted}
         className={`px-4 py-2 text-sm font-semibold rounded-full transition-colors ${
           isCompleted
             ? 'bg-green-100 text-green-800 hover:bg-green-200'
