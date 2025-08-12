@@ -44,39 +44,41 @@ const generateLogDescription = (event) => {
  * @param {object} event - An object containing event details from the analytics handler.
  */
 export const logEvent = async (userId, event) => {
-  if (!userId || !event) {
-    console.warn("logEvent called without userId or event data.");
-    return;
-  }
+  if (!userId) return;
 
   try {
     // 1. Fetch the user's public IP address
     const ipResponse = await fetch("https://api.ipify.org?format=json");
     const { ip } = await ipResponse.json();
 
-    // 2. Generate the detailed, human-readable description
-    const description = generateLogDescription(event);
-
-    // 3. Prepare the full payload for Firestore
     const firestorePayload = {
-      userId,
-      timestamp: serverTimestamp(),
-      ip,
-      description, // Save the description to Firestore as well
-      ...event
+        Time: serverTimestamp(),
+        "Event context": event.pathname || window.location.pathname,
+        Component: event.component || 'N/A', // We can add data-component attribute later
+        "Event name": event.analyticsId,
+        Description: generateLogDescription(event, userId),
+        Origin: 'web',
+        "IP address": ip,
+        Username: event.userEmail, // Using email as username
+        "User Email": event.userEmail,
+        "User Role": event.isAdmin ? 'Admin' : 'Learner', // We can add data-isAdmin later
+        "Course Title": event.courseTitle || 'N/A',
+        "Content Type": event.contentType || 'N/A', // We can add data-content-type later
+        Action: event.eventType,
+        Score: event.score || null,
+        "Progress %": event.progressPercent || null,
+        "Time Spent (seconds)": event.timeSpent || null,
+        // Keep original data for debugging
+        raw_event_data: event
     };
 
-    // 4. Save the event to Firestore
     await addDoc(collection(db, "clickstream"), firestorePayload);
 
-    // 5. Format and print the detailed log to the browser console
+    // Console logging can remain the same or be updated to use the new fields
     const date = new Date();
     const formattedDate = `${date.toLocaleDateString()}, ${date.toLocaleTimeString()}`;
-    const courseName = event.courseTitle || 'N/A';
-    const eventName = event.analyticsId || 'Log report viewed'; // Fallback text
-
-    const consoleMessage = `${formattedDate}\tCourse: ${courseName}\tLogs\t${eventName}\t${description}\tweb\t${ip}`;
-
+    const consoleMessage = `${formattedDate}\tEvent: ${firestorePayload["Event name"]}\tDesc: ${firestorePayload.Description}\tIP: ${ip}`;
+    
     console.log(consoleMessage);
 
   } catch (err) {
