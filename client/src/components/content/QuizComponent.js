@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import { logEvent } from '../../utils/logEvent';
 
-export default function QuizComponent({ data, courseId, user }) {
+export default function QuizComponent({ data, courseId, courseTitle, user }) {
   const [answers, setAnswers] = useState(Array(data.questions.length).fill(''));
   const [submitted, setSubmitted] = useState(false);
   const [score, setScore] = useState(0);
@@ -29,9 +30,24 @@ export default function QuizComponent({ data, courseId, user }) {
         calculatedScore++;
       }
     });
-
+    
     setScore(calculatedScore);
     setSubmitted(true);
+    
+    // Manual log on submit to include score
+    if (user) {
+      logEvent(user.uid, {
+        eventType: 'quiz_interaction',
+        analyticsId: 'quiz_submit',
+        userEmail: user.email,
+        courseId,
+        courseTitle,
+        contentId: data.id,
+        contentType: 'quiz',
+        score: calculatedScore,
+        totalQuestions: data.questions.length,
+      });
+    }
   };
 
   const renderQuestionInput = (q, qIndex) => {
@@ -51,6 +67,7 @@ export default function QuizComponent({ data, courseId, user }) {
                   disabled={submitted}
                   data-analytics-id="quiz-option-select"
                   data-course-id={courseId}
+                  data-course-title={courseTitle}
                   data-content-id={data.id}
                   data-question-index={qIndex}
                   data-option-index={optionIndex}
@@ -103,9 +120,7 @@ export default function QuizComponent({ data, courseId, user }) {
       {!submitted && (
         <button
           onClick={handleSubmit}
-          data-analytics-id="quiz-submit-button"
-          data-course-id={courseId}
-          data-content-id={data.id}
+          // The submit button no longer needs analytics tags as it's handled manually
           className="w-full px-4 py-2 mt-4 font-bold text-white bg-blue-600 rounded-md hover:bg-blue-700"
         >
           Submit Quiz

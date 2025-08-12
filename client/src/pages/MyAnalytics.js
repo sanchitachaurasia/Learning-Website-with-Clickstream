@@ -40,7 +40,7 @@ export default function MyAnalytics() {
 
         let totalTimeSpent = 0;
         let totalScore = 0;
-        let quizCount = 0;
+        let totalQuestionsAttempted = 0;
 
         userData.forEach(event => {
           // Calculate total time spent from video pauses
@@ -50,13 +50,12 @@ export default function MyAnalytics() {
           // Calculate average quiz score
           if (event['Event name'] === 'quiz_submit' && event.Score !== null) {
             totalScore += event.Score;
-            // Assuming total questions is 5, adjust if needed
-            const totalQuestions = event.raw_event_data?.totalQuestions || 5; 
-            quizCount += totalQuestions;
+            // Use the totalQuestions from the event log for accurate percentage
+            totalQuestionsAttempted += event.raw_event_data?.totalQuestions || 0;
           }
         });
 
-        const avgScore = quizCount > 0 ? (totalScore / quizCount) * 100 : 0;
+        const avgScore = totalQuestionsAttempted > 0 ? (totalScore / totalQuestionsAttempted) * 100 : 0;
 
         setStats({
           totalTime: Math.round(totalTimeSpent / 60), // Convert to minutes

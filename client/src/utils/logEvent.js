@@ -126,7 +126,7 @@ export const logEvent = async (userId, event) => {
         "Event context": event.pathname || window.location.pathname,
         Component: event.component || 'N/A', // We can add data-component attribute later
         "Event name": event.analyticsId,
-        Description: generateLogDescription(event, userId),
+        Description: generateLogDescription(event),
         Origin: 'web',
         "IP address": ip,
         Username: event.userEmail, // Using email as username
@@ -135,9 +135,9 @@ export const logEvent = async (userId, event) => {
         "Course Title": event.courseTitle || 'N/A',
         "Content Type": event.contentType || 'N/A', // We can add data-content-type later
         Action: event.eventType,
-        Score: event.score || null,
-        "Progress %": event.progressPercent || null,
-        "Time Spent (seconds)": event.timeSpent || null,
+        Score: event.score ?? null,
+        "Progress %": event.progressPercent ?? null,
+        "Time Spent (seconds)": event.timeSpent ?? null,
         // Keep original data for debugging
         raw_event_data: event
     };

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useRef } from 'react';
 import YouTube from 'react-youtube';
 import { logEvent } from '../../utils/logEvent';
 
@@ -23,11 +23,12 @@ export default function VideoContent({ data, courseId, courseTitle, user }) {
         courseId,
         courseTitle,
         contentId: data.id,
+        contentType: 'video',
       });
     }
   };
 
-  const handlePause = () => {
+  const handlePauseOrEnd = () => {
     if (!user || !playStartTime.current) return;
 
     // Calculate the time spent in seconds
@@ -41,7 +42,8 @@ export default function VideoContent({ data, courseId, courseTitle, user }) {
       courseId,
       courseTitle,
       contentId: data.id,
-      timeSpent: Math.round(timeSpent), // Log the duration
+      contentType: 'video',
+      timeSpent: timeSpent,
     });
   };
 
@@ -51,8 +53,8 @@ export default function VideoContent({ data, courseId, courseTitle, user }) {
         videoId={data.youtubeId} 
         opts={opts} 
         onPlay={handlePlay} 
-        onPause={handlePause}
-        onEnd={handlePause} // Also log time spent when the video ends
+        onPause={handlePauseOrEnd}
+        onEnd={handlePauseOrEnd}
       />
     </div>
   );
