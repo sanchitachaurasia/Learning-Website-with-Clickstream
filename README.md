@@ -1,4 +1,4 @@
-# LearnX - Full-Stack Learning Platform with Advanced Analytics
+# LearnX - Learning Platform with Advanced Analytics
 
 LearnX is a comprehensive, full-stack e-learning platform built with React and Firebase. It provides a complete ecosystem for online learning, featuring a user-facing application for students and a powerful, role-based administrative dashboard for content, user, and analytics management.
 
