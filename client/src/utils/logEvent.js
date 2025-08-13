@@ -44,12 +44,16 @@ const generateLogDescription = (event) => {
       return `The user '${userId}' deregistered from the course '${courseTitle}'.`;
     case 'completion-button':
       return `The user '${userId}' marked content in course '${courseTitle}' as ${event.completedStatus === 'true' ? 'incomplete' : 'complete'}.`;
-    case 'quiz-submit-button':
-      return `The user '${userId}' submitted the quiz in course '${courseTitle}'.`;
+    case 'quiz_submit': 
+      return `User '${userId}' submitted the quiz in course '${courseTitle}' with a score of ${event.score}/${event.totalQuestions}.`;
 
     // Video events
     case 'video-player':
       return `The user '${userId}' interacted with a video player in course '${courseTitle}'.`;
+    case 'video_play': 
+      return `User '${userId}' started playing a video in course '${courseTitle}'.`;
+    case 'video_pause': 
+      return `User '${userId}' paused a video in course '${courseTitle}'.`;
 
     // Admin navigation events
     case 'admin-manage-courses':
