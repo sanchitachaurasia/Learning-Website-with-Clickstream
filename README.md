@@ -6,6 +6,8 @@ The application's core is its advanced clickstream tracking system, which logs e
 
 **Live Demo:** https://assignment2-82dfb.web.app
 
+**Demo Video:** [View on Google Drive](https://drive.google.com/file/d/1pFcsIQV89puJtIZckZ4od-X5A72jkcrd/view?usp=sharing)
+
 ---
 
 ## Features
@@ -47,7 +49,7 @@ To set up and run this project locally from the GitHub repository, follow these 
 1. **Clone the Repository:**
    Open your terminal and clone the project from GitHub.
    ```bash
-   git clone [https://github.com/sanchitachaurasia/Learning-Website-with-Clickstream.git](https://github.com/sanchitachaurasia/Learning-Website-with-Clickstream.git)
+   git clone https://github.com/sanchitachaurasia/Learning-Website-with-Clickstream.git
     ```
 
 2.  **Navigate to the Project Directory:**
